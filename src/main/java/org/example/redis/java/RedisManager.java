@@ -3,6 +3,8 @@ package org.example.redis.java;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
+import java.util.List;
+import java.util.Map;
 
 public class RedisManager {
     private final RedisClient redisClient;
@@ -30,12 +32,57 @@ public class RedisManager {
         return commands.get(key);
     }
 
-    // 만료 시간 설정 (EXPIRE)
+    // List 추가 (LPUSH)
+    public void pushToList(String listName, String value) {
+        commands.lpush(listName, value);
+    }
+
+    // List 조회
+    public List<String> getList(String listName) {
+        return commands.lrange(listName, 0, -1);
+    }
+
+    // Set 추가
+    public void addToSet(String setName, String value) {
+        commands.sadd(setName, value);
+    }
+
+    // Set 조회
+    public List<String> getSet(String setName) {
+        return commands.smembers(setName).stream().toList();
+    }
+
+    // Sorted Set 추가
+    public void addToSortedSet(String sortedSetName, double score, String value) {
+        commands.zadd(sortedSetName, score, value);
+    }
+
+    // Sorted Set 조회
+    public List<String> getSortedSet(String sortedSetName) {
+        return commands.zrange(sortedSetName, 0, -1);
+    }
+
+    // Hash 추가
+    public void setHash(String hashName, String key, String value) {
+        commands.hset(hashName, key, value);
+    }
+
+    // Hash 조회
+    public Map<String, String> getHash(String hashName) {
+        return commands.hgetall(hashName);
+    }
+
+    // EXPIRE 설정
     public void setExpiration(String key, int seconds) {
         commands.expire(key, seconds);
     }
 
-    // 키 삭제
+    // TTL 조회
+    public long getTTL(String key) {
+        return commands.ttl(key);
+    }
+
+    // 데이터 삭제
     public void deleteKey(String key) {
         commands.del(key);
     }
