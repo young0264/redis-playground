@@ -1,6 +1,5 @@
 package org.example.redis.java;
 
-//todo: test
 public class MainForJavaExam {
     public static void main(String[] args) throws InterruptedException {
 
