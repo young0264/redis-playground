@@ -29,7 +29,7 @@ public class TodoManager {
     // 완료된 일 제거 (LPOP)
     public void completeTodo() {
         String completed = commands.lpop(TODO_KEY);
-        System.out.println("완료된 일: " + completed);
+        System.out.println("완료된 일(제거 대상): " + completed);
     }
 
     // 특정 시간 후 자동 삭제 (EXPIRE)
