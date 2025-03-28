@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="Gradle: javax.cache:cache-api:1.1.1" external-system-id="GRADLE">
+  <library name="Gradle: javax.cache:cache-api:1.1.1">
     <CLASSES>
-      <root url="jar://$USER_HOME$/project/demo/.gradle/caches/modules-2/files-2.1/javax.cache/cache-api/1.1.1/c56fb980eb5208bfee29a9a5b9d951aba076bd91/cache-api-1.1.1.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.cache/cache-api/1.1.1/c56fb980eb5208bfee29a9a5b9d951aba076bd91/cache-api-1.1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
