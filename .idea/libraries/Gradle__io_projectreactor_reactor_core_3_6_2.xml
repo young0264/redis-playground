@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="Gradle: io.projectreactor:reactor-core:3.6.2" external-system-id="GRADLE">
+  <library name="Gradle: io.projectreactor:reactor-core:3.6.2">
     <CLASSES>
-      <root url="jar://$USER_HOME$/project/demo/.gradle/caches/modules-2/files-2.1/io.projectreactor/reactor-core/3.6.2/679ac38d031c154374182748491a177a76c890e1/reactor-core-3.6.2.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.projectreactor/reactor-core/3.6.2/679ac38d031c154374182748491a177a76c890e1/reactor-core-3.6.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
