@@ -8,6 +8,9 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -15,6 +18,8 @@ public class ProductServiceTest {
     private RedissonClient redisson;
     private FakeProductRepository db;
     private ProductService service;
+    private BlockingQueue<UpdateProductCommand> updateQueue;
+    ;
 
     @BeforeAll
     void setup() {
@@ -22,7 +27,8 @@ public class ProductServiceTest {
         config.useSingleServer().setAddress("redis://127.0.0.1:6379");
         redisson = Redisson.create(config);
         db = new FakeProductRepository();
-        service = new ProductService(redisson, db);
+        updateQueue = new LinkedBlockingQueue<>();
+        service = new ProductService(redisson, db, updateQueue);
     }
 
     @AfterAll
