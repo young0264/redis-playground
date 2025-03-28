@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/redis-playground.iml" filepath="$PROJECT_DIR$/.idea/redis-playground.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-playground.main.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-playground.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-playground.test.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-playground.test.iml" />
     </modules>
   </component>
 </project>
