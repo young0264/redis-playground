@@ -42,8 +42,6 @@ class LookAsideCacheExamTest {
         assertNotNull(fromSecondCall);
         assertEquals("샴푸", fromSecondCall.name());
         assertEquals(1, db.getFindCallCount());
-
-        // 객체가 같을 수도 다를 수도 있음 → name만 비교
     }
 
     @Test
