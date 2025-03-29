@@ -20,7 +20,6 @@ public class ProductService {
         this.redisson = redisson;
         this.db = db;
         this.updateQueue = updateQueue;
-        startAsyncDbSyncWorker(); // 워커 시작
     }
 
     public Product getProduct(String id) {
@@ -43,41 +42,11 @@ public class ProductService {
         }
     }
 
-    // write-back 전략 예시
-    public void updateProduct(String key, Product updated) {
-
-        // 1. 캐시에 먼저 저장
-        redisson.getBucket(key)
-                .set(updated, 10, TimeUnit.MINUTES);
-        System.out.println("캐시 업데이트 완료");
-
-        // 2. 비동기 큐에 저장, 동기화 명령 추가
-        updateQueue.offer(new UpdateProductCommand(key, updated));
-        System.out.println("DB 업데이트 요청을 큐에 저장 (비동기)");
-    }
-
-    private void startAsyncDbSyncWorker() {
-        Thread worker = new Thread(() -> {
-            while (true) {
-                try {
-                    UpdateProductCommand cmd = updateQueue.take();// 블로킹 대기
-                    db.update(cmd.keyId(), cmd.updated());
-                    System.out.println("DB 동기화 완료 : " + cmd.keyId());
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
-        worker.setDaemon(true);
-        worker.start();
-    }
-
-
     // write-through 전략 예시
-    public void updateAndSyncToDB(String id, Product updated) {
-        redisson.getBucket("product:" + id).set(updated, ttlSeconds, TimeUnit.SECONDS);
-        db.update(id, updated);
+    public void updateAndSyncToDB(String key, Product updated) {
+        redisson.getBucket(key)
+                .set(updated, ttlSeconds, TimeUnit.SECONDS);
+        db.update(key, updated);
         System.out.println("캐시 + DB 모두 업데이트 (write-through)");
     }
 

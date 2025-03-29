@@ -1,9 +1,7 @@
 package org.example.week2;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.example.week2.writeBack.WriteBackExam;
+import org.junit.jupiter.api.*;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -18,8 +16,8 @@ public class ProductServiceTest {
     private RedissonClient redisson;
     private FakeProductRepository db;
     private ProductService service;
+    private WriteBackExam writeBackExamService;
     private BlockingQueue<UpdateProductCommand> updateQueue;
-    ;
 
     @BeforeAll
     void setup() {
@@ -29,6 +27,7 @@ public class ProductServiceTest {
         db = new FakeProductRepository();
         updateQueue = new LinkedBlockingQueue<>();
         service = new ProductService(redisson, db, updateQueue);
+        writeBackExamService = new WriteBackExam(redisson, db, updateQueue);
     }
 
     @AfterAll
@@ -37,6 +36,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("cache-miss exam test")
     void testCacheMiss_thenHit() {
         String key = "1";
 
@@ -50,6 +50,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("cache-expiration exam test")
     void testCacheExpiration() throws InterruptedException {
         String key = "2";
 
@@ -57,7 +58,6 @@ public class ProductServiceTest {
         assertNotNull(p1);
 
         // TTL 3초라면, 4초 기다리기
-        Thread.sleep(4_000);
 
         Product p2 = service.getProduct(key); // 캐시 만료 후 재조회
         assertNotNull(p2);
@@ -65,9 +65,10 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Write-Back exam test")
     void testWriteBack() {
         Product updated = new Product("3", "캐시전용상품", 9999);
-        service.updateProduct("3", updated);
+        writeBackExamService.updateProduct("3", updated);
 
         Product cached = service.getProduct("3");
         assertEquals("캐시전용상품", cached.name());
@@ -78,6 +79,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Write-Through exam test")
     void testWriteThrough() {
         Product updated = new Product("4", "동기화상품", 7777);
         service.updateAndSyncToDB("4", updated);
