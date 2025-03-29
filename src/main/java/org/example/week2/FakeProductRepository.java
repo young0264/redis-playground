@@ -6,6 +6,7 @@ import java.util.Map;
 public class FakeProductRepository {
 
     private final Map<String, Product> db = new HashMap<>();
+    private int findCallCount = 0;
 
     // 기본 생성자로 key-value 가짜 데이터 insert(put)
     public FakeProductRepository() {
@@ -16,6 +17,7 @@ public class FakeProductRepository {
 
     public Product findById(String id) {
         System.out.println("DB Access: " + id);
+        findCallCount++;
         return db.get(id);
     }
 
@@ -23,5 +25,12 @@ public class FakeProductRepository {
         db.put(id, product);
     }
 
+    public int getFindCallCount() {
+        return findCallCount;
+    }
+
+    public void resetFindCallCount() {
+        findCallCount = 0;
+    }
 
 }
