@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductServiceTest {
     private RedissonClient redisson;
     private FakeProductRepository db;
-    private ProductService service;
+    private ProductService productService;
     private WriteBackExam writeBackExamService;
     private BlockingQueue<UpdateProductCommand> updateQueue;
 
@@ -26,7 +26,7 @@ public class ProductServiceTest {
         redisson = Redisson.create(config);
         db = new FakeProductRepository();
         updateQueue = new LinkedBlockingQueue<>();
-        service = new ProductService(redisson, db, updateQueue);
+        productService = new ProductService(redisson, db, updateQueue);
         writeBackExamService = new WriteBackExam(redisson, db, updateQueue);
     }
 
@@ -41,12 +41,12 @@ public class ProductServiceTest {
         String key = "1";
 
         // 최초 요청 → 캐시 미스 → DB 조회
-        Product p1 = service.getProduct(key);
-        assertNotNull(p1);
+        Product p1 = productService.getProduct(key);
+        Assertions.assertNotNull(p1);
 
         // 두 번째 요청 → 캐시 히트
-        Product p2 = service.getProduct(key);
-        assertEquals(p1.name(), p2.name());
+        Product p2 = productService.getProduct(key);
+        Assertions.assertEquals(p1.name(), p2.name());
     }
 
     @Test
@@ -54,14 +54,14 @@ public class ProductServiceTest {
     void testCacheExpiration() throws InterruptedException {
         String key = "2";
 
-        Product p1 = service.getProduct(key);
-        assertNotNull(p1);
+        Product p1 = productService.getProduct(key);
+        Assertions.assertNotNull(p1);
 
         // TTL 3초라면, 4초 기다리기
 
-        Product p2 = service.getProduct(key); // 캐시 만료 후 재조회
-        assertNotNull(p2);
-        assertEquals(p1.id(), p2.id());
+        Product p2 = productService.getProduct(key); // 캐시 만료 후 재조회
+        Assertions.assertNotNull(p2);
+        Assertions.assertEquals(p1.id(), p2.id());
     }
 
     @Test
@@ -70,24 +70,24 @@ public class ProductServiceTest {
         Product updated = new Product("3", "캐시전용상품", 9999);
         writeBackExamService.updateProduct("3", updated);
 
-        Product cached = service.getProduct("3");
-        assertEquals("캐시전용상품", cached.name());
+        Product cached = productService.getProduct("3");
+        Assertions.assertEquals("캐시전용상품", cached.name());
 
         // DB에는 아직 반영되지 않았을 수 있음
         Product fromDb = db.findById("3");
-        assertNotEquals("캐시전용상품", fromDb.name());
+        Assertions.assertNotEquals("캐시전용상품", fromDb.name());
     }
 
     @Test
     @DisplayName("Write-Through exam test")
     void testWriteThrough() {
         Product updated = new Product("4", "동기화상품", 7777);
-        service.updateAndSyncToDB("4", updated);
+        productService.updateAndSyncToDB("4", updated);
 
-        Product cached = service.getProduct("4");
+        Product cached = productService.getProduct("4");
         Product fromDb = db.findById("4");
 
-        assertEquals("동기화상품", cached.name());
-        assertEquals("동기화상품", fromDb.name());
+        Assertions.assertEquals("동기화상품", cached.name());
+        Assertions.assertEquals("동기화상품", fromDb.name());
     }
 }
