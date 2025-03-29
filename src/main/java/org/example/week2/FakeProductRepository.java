@@ -17,8 +17,11 @@ public class FakeProductRepository {
 
     public Product findById(String id) {
         System.out.println("DB Access: " + id);
-        findCallCount++;
-        return db.get(id);
+        Product product = db.get(id);
+        if (product != null) {
+            findCallCount++;
+        }
+        return product;
     }
 
     public void update(String id, Product product) {
