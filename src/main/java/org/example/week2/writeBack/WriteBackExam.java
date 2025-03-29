@@ -9,7 +9,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Write-Back 캐시 전략 예제 클래스
+ * [쓰기] Write-Back 캐시 전략 예제 클래스
  * 1. 우선 캐시 저장 -> 사용자 요청이 빠르게 반영됨 (빠른 응답)
  * 2. 비동기 큐에 저장 -> 나중에 백그라운드 쓰레드나 워커가 DB에 실제 반영
  * 3. 워커가 DB에 저장 -> 데이터의 영속성 보장 (Redis 날아가도 안전)
