@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RedisCacheLoader {
 
-    private final long ttlSeconds = 3;
+    private final long TTL_SECONDS = 3;
     private final RedissonClient redisson;
     private final FakeProductRepository db;
 
@@ -48,7 +48,7 @@ public class RedisCacheLoader {
 
         Product dbProduct = db.findById(key);
         if (dbProduct != null) {
-            redisson.getBucket(key).set(dbProduct, ttlSeconds, TimeUnit.SECONDS); // 캐시에 다시 적재
+            redisson.getBucket(key).set(dbProduct, TTL_SECONDS, TimeUnit.SECONDS); // 캐시에 다시 적재
         }
         return dbProduct;
     }
@@ -60,7 +60,7 @@ public class RedisCacheLoader {
      **/
     public void save(Product product) {
         String key = product.id();
-        redisson.getBucket(key).set(product, ttlSeconds, TimeUnit.SECONDS);
+        redisson.getBucket(key).set(product, TTL_SECONDS, TimeUnit.SECONDS);
         db.update(key, product);
     }
 }

@@ -21,8 +21,6 @@ public class ReadThroughCacheExam {
 
     private final RedissonClient redisson;
     private final RedisCacheLoader redisCacheLoader;
-    private final long ttlSeconds = 3;
-
 
     public ReadThroughCacheExam(RedissonClient redisson, RedisCacheLoader redisCacheLoader) {
         this.redisson = redisson;

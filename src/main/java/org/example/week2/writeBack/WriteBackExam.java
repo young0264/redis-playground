@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
  **/
 public class WriteBackExam {
 
-    private final long ttlSeconds = 3;
     private final RedissonClient redisson;
     private final FakeProductRepository db;
     private final BlockingQueue<UpdateProductCommand> updateQueue;

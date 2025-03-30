@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class LookAsideCacheExam {
     private final RedissonClient redisson;
     private final FakeProductRepository db;
-    private final long ttlSeconds = 3;
+    private final long TTL_SECONDS = 3;
 
     public LookAsideCacheExam(RedissonClient redisson, FakeProductRepository db) {
         this.redisson = redisson;
@@ -47,7 +47,7 @@ public class LookAsideCacheExam {
 
     private void saveProductToCache(RBucket<Product> bucket, Product product) {
         if (product != null) {
-            bucket.set(product, ttlSeconds, TimeUnit.SECONDS);
+            bucket.set(product, TTL_SECONDS, TimeUnit.SECONDS);
             System.out.println("DB에서 조회 후 캐시에 저장");
         } else {
             System.out.println("DB에 해당하는 데이터가 없습니다.\n");
