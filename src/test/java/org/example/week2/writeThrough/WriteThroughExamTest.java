@@ -37,11 +37,14 @@ public class WriteThroughExamTest {
         Product product = new Product("item:1", "샴푸", 3000);
         writeThroughExam.saveProduct(product);
 
-        Product cached = writeThroughExam.getProduct("item:1");
-        assertNotNull(cached);
-        assertEquals("샴푸", cached.name());
-        assertEquals(3000, cached.price());
-        assertEquals(0, db.getFindCallCount());
+        Product cachedProduct = writeThroughExam.getProduct("item:1");
+        Product dbProduct = db.findById("item:1");
+
+        assertNotNull(cachedProduct);
+        assertEquals("샴푸", cachedProduct.name());
+        assertEquals(cachedProduct.name(), dbProduct.name());
+        assertEquals(3000, cachedProduct.price());
+        assertEquals(1, db.getFindCallCount());
     }
 
     @Test
