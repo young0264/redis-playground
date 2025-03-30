@@ -16,7 +16,6 @@ import java.util.Map;
  **/
 public class WriteThroughExam {
 
-    private final long ttlSeconds = 3;
     private final RedissonClient redisson;
     private final RedisCacheLoader redisCacheLoader;
 

@@ -15,7 +15,7 @@ public class RedisCacheLoader implements MapLoader<String, Product> {
 
     private final FakeProductRepository db;
     private final RedissonClient redisson;
-    private final long ttlSeconds = 3;
+    private final long TTL_SECONDS = 3;
 
     public RedisCacheLoader(FakeProductRepository db, RedissonClient redisson) {
         this.db = db;
@@ -30,7 +30,7 @@ public class RedisCacheLoader implements MapLoader<String, Product> {
         Product productByDb = db.findById(key); // DB에서 데이터를 조회
 
         redisson.getBucket(key)
-                .set(productByDb, ttlSeconds, TimeUnit.MINUTES); // 자체 업데이트
+                .set(productByDb, TTL_SECONDS, TimeUnit.MINUTES); // 자체 업데이트
         return productByDb;
     }
 

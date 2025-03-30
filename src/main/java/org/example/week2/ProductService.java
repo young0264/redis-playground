@@ -10,7 +10,7 @@ public class ProductService {
 
     private final RedissonClient redisson;
     private final FakeProductRepository db;
-    private final long ttlSeconds = 3;
+    private final long TTL_SECONDS = 3;
     private final BlockingQueue<UpdateProductCommand> updateQueue;
 
 
@@ -36,7 +36,7 @@ public class ProductService {
             System.out.println(" Cache Miss: " + key);
             Product product = db.findById(id);
             if (product != null) {
-                bucket.set(product, ttlSeconds, TimeUnit.SECONDS); // SETEX 효과
+                bucket.set(product, TTL_SECONDS, TimeUnit.SECONDS); // SETEX 효과
             }
             return product;
         }
@@ -45,7 +45,7 @@ public class ProductService {
     // write-through 전략 예시
     public void updateAndSyncToDB(String key, Product updated) {
         redisson.getBucket(key)
-                .set(updated, ttlSeconds, TimeUnit.SECONDS);
+                .set(updated, TTL_SECONDS, TimeUnit.SECONDS);
         db.update(key, updated);
         System.out.println("캐시 + DB 모두 업데이트 (write-through)");
     }
