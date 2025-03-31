@@ -6,6 +6,8 @@ import org.example.week2.UpdateProductCommand;
 import org.redisson.api.RedissonClient;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,6 +21,8 @@ public class WriteBackExam {
     private final RedissonClient redisson;
     private final FakeProductRepository db;
     private final BlockingQueue<UpdateProductCommand> updateQueue;
+    private final ExecutorService workerPool = Executors.newFixedThreadPool(4); // 워커 수 조절
+
 
     /**
      * 생성자 -> 캐시, DB, 큐를 주입받고 워커 스레드를 시작한다.
@@ -69,6 +73,38 @@ public class WriteBackExam {
         });
         worker.setDaemon(true);
         worker.start();
+    }
+
+    /**
+     * 병렬처리
+     **/
+    private void startAsyncDbSyncWorkder() {
+        Runnable dispatcher = () -> {
+            while (true) {
+                try {
+                    UpdateProductCommand updateProductCommand = updateQueue.take();// 블로킹 대기, 큐에서 꺼냄
+                    workerPool.submit(() -> {
+                        try {
+                            Thread.sleep(1000);
+                            db.update(updateProductCommand.keyId()
+                                    , updateProductCommand.updatedProduct());
+                            System.out.println(
+                                    Thread.currentThread().getName()
+                                            + "DB 동기화 완료 key"
+                                            + updateProductCommand.keyId());
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        };
+        Thread dispatcherThread = new Thread(dispatcher);
+        dispatcherThread.setDaemon(true);
+        dispatcherThread.start();
     }
 
 }
