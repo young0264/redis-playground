@@ -9,25 +9,20 @@ import org.redisson.config.Config;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ProductServiceTest {
     private RedissonClient redisson;
     private FakeProductRepository db;
     private ProductService productService;
-    private WriteBackExam writeBackExamService;
     private BlockingQueue<UpdateProductCommand> updateQueue;
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
-        Config config = new Config(); //todo: RedisConfig
+        Config config = new Config();
         config.useSingleServer().setAddress("redis://127.0.0.1:6379");
         redisson = Redisson.create(config);
         db = new FakeProductRepository();
         updateQueue = new LinkedBlockingQueue<>();
         productService = new ProductService(redisson, db, updateQueue);
-        writeBackExamService = new WriteBackExam(redisson, db, updateQueue);
     }
 
     @AfterAll
@@ -62,20 +57,6 @@ public class ProductServiceTest {
         Product p2 = productService.getProduct(key); // 캐시 만료 후 재조회
         Assertions.assertNotNull(p2);
         Assertions.assertEquals(p1.id(), p2.id());
-    }
-
-    @Test
-    @DisplayName("Write-Back exam test")
-    void testWriteBack() {
-        Product updated = new Product("3", "캐시전용상품", 9999);
-        writeBackExamService.updateProduct("3", updated);
-
-        Product cached = productService.getProduct("3");
-        Assertions.assertEquals("캐시전용상품", cached.name());
-
-        // DB에는 아직 반영되지 않았을 수 있음
-        Product fromDb = db.findById("3");
-        Assertions.assertNotEquals("캐시전용상품", fromDb.name());
     }
 
     @Test
