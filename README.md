@@ -18,18 +18,18 @@
 
   - **과제명**: “Redis를 이용한 서비스/데이터 조회 응답 속도 개선” (캐싱전략 직접 구현)
   - **액션 아이템**:
-    - [ ] Spring 없이 캐싱 구현
-    - [ ] Redis를 활용하여 데이터베이스 조회 결과를 캐싱하는 코드 작성
-    - [ ] SETEX를 이용해 일정 시간 후 캐시가 삭제되도록 설정
-    - [ ] 캐싱 미스(Cache Miss) 발생 시 데이터베이스에서 조회 후 Redis에 저장하는 로직 구현
+    - [x] Spring 없이 캐싱 구현
+    - [x] Redis를 활용하여 데이터베이스 조회 결과를 캐싱하는 코드 작성
+    - [x] SETEX를 이용해 일정 시간 후 캐시가 삭제되도록 설정
+    - [x] 캐싱 미스(Cache Miss) 발생 시 데이터베이스에서 조회 후 Redis에 저장하는 로직 구현
 
   - **추가 도전**: “상품 정보 캐싱 시스템” 만들기
-    - [ ] 특정 상품 조회 시, Redis에서 먼저 검색
-    - [ ] 없다면 DB에서 가져와 Redis에 저장 (SETEX)
-    - [ ] 캐시 만료 후 자동 업데이트
+    - [x] 특정 상품 조회 시, Redis에서 먼저 검색
+    - [x] 없다면 DB에서 가져와 Redis에 저장 (SETEX)
+    - [x] 캐시 만료 후 자동 업데이트 -> TTL, PER
 
   - **추가 도전2**: 
-    - [ ] 캐시 갱신 전략 (write-back or PR 전략)
-    - [ ] 캐시 정책: LRU
-    - [ ] cache stampede 대응
-    - [ ] 캐시 설계 전략 반영 (eviction, 만료 정책 등) 
+    - [x] 캐시 갱신 전략 (cache-aside, write-through, write-back.. 등등)
+    - [x] 캐시 정책 -> 저장, 만료, 제거, 용량제한 등(allkeys-lru, volatile-ttl)
+    - [x] cache stampede 대응
+    - [x] 캐시 설계 전략 구현 (eviction, 만료 정책 등) 
