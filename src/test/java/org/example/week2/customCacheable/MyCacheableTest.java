@@ -1,6 +1,10 @@
 package org.example.week2.customCacheable;
 
-import org.example.week2.Product;
+import org.example.redis.week2.Product;
+import org.example.redis.week2.customCacheable.CacheProxy;
+import org.example.redis.week2.customCacheable.MyCacheable;
+import org.example.redis.week2.customCacheable.ProductService;
+import org.example.redis.week2.customCacheable.RedisCacheManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

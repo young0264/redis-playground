@@ -1,6 +1,6 @@
-package org.example.week2.readThrough;
+package org.example.redis.week2.readThrough;
 
-import org.example.week2.Product;
+import org.example.redis.week2.Product;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 

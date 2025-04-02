@@ -1,7 +1,8 @@
 package org.example.week2.lookAside;
 
-import org.example.week2.FakeProductRepository;
-import org.example.week2.Product;
+import org.example.redis.week2.FakeProductRepository;
+import org.example.redis.week2.Product;
+import org.example.redis.week2.lookAside.LookAsideCacheExam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package org.example.week2.customCacheable;
+package org.example.redis.week2.customCacheable;
 
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;

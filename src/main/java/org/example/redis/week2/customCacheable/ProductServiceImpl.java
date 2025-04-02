@@ -1,6 +1,6 @@
-package org.example.week2.customCacheable;
+package org.example.redis.week2.customCacheable;
 
-import org.example.week2.Product;
+import org.example.redis.week2.Product;
 
 /**
  * ProductService가 class 라면 → Java Proxy (java.lang.reflect.Proxy) 기반 프록시로는 처리할 수 없음

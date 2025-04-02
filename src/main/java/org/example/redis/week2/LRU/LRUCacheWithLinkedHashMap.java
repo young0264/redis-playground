@@ -1,4 +1,4 @@
-package org.example.week2.LRU;
+package org.example.redis.week2.LRU;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

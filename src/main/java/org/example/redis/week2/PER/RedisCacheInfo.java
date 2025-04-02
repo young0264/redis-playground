@@ -1,4 +1,4 @@
-package org.example.week2.PER;
+package org.example.redis.week2.PER;
 
 public class RedisCacheInfo {
 

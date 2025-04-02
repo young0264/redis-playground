@@ -1,4 +1,4 @@
-package org.example.week2.LRU;
+package org.example.redis.week2.LRU;
 
 public class LRUCacheWithoutLinkedHashMap {
 

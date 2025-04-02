@@ -1,18 +1,17 @@
 package org.example.week2.writeBack;
 
-import org.example.week2.FakeProductRepository;
-import org.example.week2.Product;
-import org.example.week2.ProductService;
-import org.example.week2.UpdateProductCommand;
+import org.example.redis.week2.FakeProductRepository;
+import org.example.redis.week2.Product;
+import org.example.redis.week2.ProductService;
+import org.example.redis.week2.UpdateProductCommand;
+import org.example.redis.week2.writeBack.WriteBackExam;
 import org.junit.jupiter.api.*;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

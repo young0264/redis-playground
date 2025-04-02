@@ -1,6 +1,6 @@
-package org.example.week2.PER;
+package org.example.redis.week2.PER;
 
-import org.example.week2.Product;
+import org.example.redis.week2.Product;
 import org.redisson.api.RedissonClient;
 
 import java.util.List;

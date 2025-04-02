@@ -1,8 +1,8 @@
-package org.example.week2.writeBack;
+package org.example.redis.week2.writeBack;
 
-import org.example.week2.FakeProductRepository;
-import org.example.week2.Product;
-import org.example.week2.UpdateProductCommand;
+import org.example.redis.week2.FakeProductRepository;
+import org.example.redis.week2.Product;
+import org.example.redis.week2.UpdateProductCommand;
 import org.redisson.api.RedissonClient;
 
 import java.util.concurrent.BlockingQueue;

@@ -1,7 +1,9 @@
 package org.example.week2.writeThrough;
 
-import org.example.week2.FakeProductRepository;
-import org.example.week2.Product;
+import org.example.redis.week2.FakeProductRepository;
+import org.example.redis.week2.Product;
+import org.example.redis.week2.writeThrough.RedisCacheLoader;
+import org.example.redis.week2.writeThrough.WriteThroughExam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
