@@ -28,7 +28,7 @@ class LookAsideCacheExamTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("첫 조회는 캐시 미스 → 두 번째는 캐시 히트로 DB 접근 없이 조회")
     void testCacheMiss_thenHit() {
         db.resetFindCallCount();
         // 캐시 초기 상태: 비어 있음
@@ -36,7 +36,6 @@ class LookAsideCacheExamTest {
         assertNotNull(fromFirstCall);
         assertEquals("샴푸", fromFirstCall.name());
         assertEquals(1, db.getFindCallCount());
-
 
         // 두 번째 호출: 캐시 히트
         Product fromSecondCall = lookAsideCacheService.getProduct("1");
@@ -46,6 +45,7 @@ class LookAsideCacheExamTest {
     }
 
     @Test
+    @DisplayName("캐시 TTL 만료 후 재조회 시 다시 DB에서 조회됨")
     void testCacheExpire() throws InterruptedException {
         // 첫 조회: 캐시 저장됨
         Product product = lookAsideCacheService.getProduct("1");
@@ -61,6 +61,7 @@ class LookAsideCacheExamTest {
     }
 
     @Test
+    @DisplayName("DB에 데이터가 없는 경우 캐시에 저장되지 않고 null 반환")
     void testCacheMiss_noDbData() {
         // DB에도 없는 데이터
         Product result = lookAsideCacheService.getProduct("unknown-key");

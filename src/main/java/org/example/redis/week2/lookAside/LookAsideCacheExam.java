@@ -30,14 +30,14 @@ public class LookAsideCacheExam {
         RBucket<Product> bucket = redisson.getBucket(key);
         Product product = bucket.get();
 
-        // cache hit
+        // CACHE HIT
         Product cacheHitProduct = returnIfCacheHit(product);
-        if (cacheHitProduct != null) return cacheHitProduct;
+        if (cacheHitProduct != null) return cacheHitProduct; // hit -> null이 아니면 return
 
-        // cache miss
-        System.out.println("캐시 미스 → DB 조회 시도");
+        // CACHE MISS
+        System.out.println("캐시 미스 → DB 조회 시도 시작");
 
-        // db 조회 시도
+        // DB 조회
         product = db.findById(key);
 
         // cache save
