@@ -25,7 +25,7 @@ class ReadThroughCacheExamTest {
         Config config = new Config();
         config.useSingleServer().setAddress("redis://127.0.0.1:6379");
         redisson = Redisson.create(config);
-
+        redisson.getKeys().flushdb(); // 현재 redis DB 전체 비우기
         db = new FakeProductRepository();
         loader = new RedisCacheLoader(db, redisson);
         readThroughCacheExam = new ReadThroughCacheExam(redisson, loader);

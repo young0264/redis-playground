@@ -28,7 +28,7 @@ public class ProductServiceTest {
         productService = new ProductService(redisson, db, updateQueue);
     }
 
-    @AfterAll
+    @AfterEach
     void teardown() {
         redisson.shutdown();
     }
