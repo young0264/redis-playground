@@ -1,4 +1,4 @@
-
+```
 function XFetch(key, ttl; β = 1)
     value, ∆, expiry ← CacheRead(key)
     if !value or Time() − ∆β log(rand()) ≥ expiry then
@@ -9,6 +9,7 @@ function XFetch(key, ttl; β = 1)
     end
     return value
 end
+```
 
 1. 캐시 데이터 value 조회( CacheRead(key))
 2. ∆(캐시 생성 소요시간)을 바탕으로 가중치β를 부여하여, 랜덤한 값 x를 생성함
