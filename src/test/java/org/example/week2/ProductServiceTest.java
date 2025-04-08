@@ -1,6 +1,5 @@
 package org.example.week2;
 
-import org.example.week2.writeBack.WriteBackExam;
 import org.junit.jupiter.api.*;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -23,11 +22,6 @@ public class ProductServiceTest {
         db = new FakeProductRepository();
         updateQueue = new LinkedBlockingQueue<>();
         productService = new ProductService(redisson, db, updateQueue);
-    }
-
-    @AfterAll
-    void teardown() {
-        redisson.shutdown();
     }
 
     @Test

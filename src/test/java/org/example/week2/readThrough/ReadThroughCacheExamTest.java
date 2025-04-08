@@ -2,7 +2,6 @@ package org.example.week2.readThrough;
 
 import org.example.week2.FakeProductRepository;
 import org.example.week2.Product;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,17 +22,10 @@ class ReadThroughCacheExamTest {
         Config config = new Config();
         config.useSingleServer().setAddress("redis://127.0.0.1:6379");
         redisson = Redisson.create(config);
-
+        redisson.getKeys().flushall();
         db = new FakeProductRepository();
         loader = new RedisCacheLoader(db, redisson);
         readThroughCacheExam = new ReadThroughCacheExam(redisson, loader);
-    }
-
-    @AfterEach
-    void teardown() {
-        redisson.getBucket("1").delete();
-        redisson.getBucket("999").delete();
-        redisson.shutdown();
     }
 
     @Test
