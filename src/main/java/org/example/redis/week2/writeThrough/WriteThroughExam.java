@@ -1,11 +1,7 @@
-package org.example.week2.writeThrough;
+package org.example.redis.week2.writeThrough;
 
-import org.example.week2.Product;
-import org.redisson.api.RBucket;
+import org.example.redis.week2.Product;
 import org.redisson.api.RedissonClient;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * [쓰기] Write-Through 캐시 전략 예제 클래스

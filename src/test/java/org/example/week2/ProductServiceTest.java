@@ -1,5 +1,9 @@
 package org.example.week2;
 
+import org.example.redis.week2.FakeProductRepository;
+import org.example.redis.week2.Product;
+import org.example.redis.week2.ProductService;
+import org.example.redis.week2.UpdateProductCommand;
 import org.junit.jupiter.api.*;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

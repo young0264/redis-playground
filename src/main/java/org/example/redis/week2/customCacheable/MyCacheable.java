@@ -1,4 +1,4 @@
-package org.example.week2.customCacheable;
+package org.example.redis.week2.customCacheable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,7 +1,7 @@
-package org.example.week2.lookAside;
+package org.example.redis.week2.lookAside;
 
-import org.example.week2.FakeProductRepository;
-import org.example.week2.Product;
+import org.example.redis.week2.FakeProductRepository;
+import org.example.redis.week2.Product;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 

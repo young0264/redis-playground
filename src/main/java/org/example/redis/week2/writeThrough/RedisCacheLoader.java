@@ -1,7 +1,7 @@
-package org.example.week2.writeThrough;
+package org.example.redis.week2.writeThrough;
 
-import org.example.week2.FakeProductRepository;
-import org.example.week2.Product;
+import org.example.redis.week2.FakeProductRepository;
+import org.example.redis.week2.Product;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 

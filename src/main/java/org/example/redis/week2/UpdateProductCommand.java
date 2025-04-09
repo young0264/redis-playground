@@ -1,4 +1,4 @@
-package org.example.week2;
+package org.example.redis.week2;
 
 public record UpdateProductCommand(
         String keyId,

@@ -1,6 +1,6 @@
 package org.example.week2;
 
-import org.example.week2.LRU.LRUCacheWithLinkedHashMap;
+import org.example.redis.week2.LRU.LRUCacheWithLinkedHashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
