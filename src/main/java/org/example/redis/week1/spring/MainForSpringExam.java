@@ -1,4 +1,4 @@
-package org.example.redis.spring;
+package org.example.redis.week1.spring;
 
 import org.springframework.boot.SpringApplication;
 

@@ -1,6 +1,6 @@
-package org.example.redis.spring.controller;
+package org.example.redis.week1.spring.controller;
 
-import org.example.redis.spring.service.TodoService;
+import org.example.redis.week1.spring.service.TodoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

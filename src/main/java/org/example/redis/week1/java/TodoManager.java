@@ -1,4 +1,4 @@
-package org.example.redis.java;
+package org.example.redis.week1.java;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;

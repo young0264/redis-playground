@@ -1,4 +1,4 @@
-package org.example.redis.spring.config;
+package org.example.redis.week1.spring.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

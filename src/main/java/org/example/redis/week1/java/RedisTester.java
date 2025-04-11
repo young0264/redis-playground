@@ -1,4 +1,4 @@
-package org.example.redis.java;
+package org.example.redis.week1.java;
 
 public class RedisTester {
     private final RedisManager redisManager;
