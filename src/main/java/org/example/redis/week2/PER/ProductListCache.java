@@ -13,12 +13,12 @@ public class ProductListCache extends RedisPERCache<List<Product>> {
     }
 
     @Override
-    protected RedisCacheInfo getCacheInfo() {
+    public RedisCacheInfo getCacheInfo() {
         return new RedisCacheInfo("product:list", PRODUCT_LIST_CACHE_TTL);
     }
 
     @Override
-    protected List<Product> getResourceData() {
+    public List<Product> getResourceData() {
         ProductService productService = new ProductService();
         return productService.getList(); // 실제 서비스 로직
     }
