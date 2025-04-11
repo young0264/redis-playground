@@ -5,11 +5,13 @@ import org.redisson.Redisson;
 public class ChatPublisher {
 
     Redisson redisson;
-    ChatSubscriber chatSubscriber;
+
+    public ChatPublisher(Redisson redisson) {
+        this.redisson = redisson;
+    }
 
     // 메시지 발행
     public void publish(String channel, String message) {
-        chatSubscriber.subscribe(channel)
-                .publish(message);
+        redisson.getTopic(channel).publish(message);
     }
 }
