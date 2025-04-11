@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="Gradle: org.jboss.marshalling:jboss-marshalling-river:2.0.11.Final">
+  <library name="Gradle: org.jboss.marshalling:jboss-marshalling-river:2.0.11.Final" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jboss.marshalling/jboss-marshalling-river/2.0.11.Final/d05ee25288b94c93c10e1d8b726305898c4fd5bf/jboss-marshalling-river-2.0.11.Final.jar!/" />
+      <root url="jar://$USER_HOME$/project/demo/.gradle/caches/modules-2/files-2.1/org.jboss.marshalling/jboss-marshalling-river/2.0.11.Final/d05ee25288b94c93c10e1d8b726305898c4fd5bf/jboss-marshalling-river-2.0.11.Final.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
