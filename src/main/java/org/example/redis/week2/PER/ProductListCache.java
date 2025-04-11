@@ -24,7 +24,7 @@ public class ProductListCache extends RedisPERCache<List<Product>> {
     }
 
     @Override
-    protected String getCacheKey() {
+    public String getCacheKey() {
         return getCacheInfo().getKey();
     }
 }
