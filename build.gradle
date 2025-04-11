@@ -25,9 +25,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '3.3.0'
 
-}
     // https://mvnrepository.com/artifact/org.redisson/redisson
-    implementation("org.redisson:redisson:3.27.2")}
+    implementation("org.redisson:redisson:3.27.2")
+
+}
 
 test {
     useJUnitPlatform()
