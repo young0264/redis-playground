@@ -1,17 +1,18 @@
 package org.example.redis.week3.chatWithJava;
 
 import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
 
 public class ChatPublisher {
 
-    Redisson redisson;
+    RedissonClient redissonClient;
 
-    public ChatPublisher(Redisson redisson) {
-        this.redisson = redisson;
+    public ChatPublisher(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
     }
 
     // 메시지 발행
     public void publish(String channel, String message) {
-        redisson.getTopic(channel).publish(message);
+        redissonClient.getTopic(channel).publish(message);
     }
 }
