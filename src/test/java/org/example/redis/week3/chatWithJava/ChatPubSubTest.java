@@ -15,7 +15,7 @@ class ChatPubSubTest {
     @Test
     void testPubSub_withRedisson() throws Exception {
         // 1. Redisson 클라이언트 설정
-        RedissonClient redisson = RedisManager.createClient();
+        RedissonClient redissonClient = RedisManager.createClient();
 
         String channel = "TEST_CHANNEL";
         String testMessage = "TEST_HELLO_GUYS";
@@ -24,14 +24,14 @@ class ChatPubSubTest {
         final StringBuilder received = new StringBuilder();
 
         // 2. 구독자 생성 및 리스너 등록
-        redisson.getTopic(channel).addListener(String.class, (c, msg) -> {
+        redissonClient.getTopic(channel).addListener(String.class, (c, msg) -> {
             System.out.println("수신 메시지: " + msg);
             received.append(msg);
             latch.countDown();
         });
 
         // 3. 발행자 생성 및 메시지 발행
-        ChatPublisher publisher = new ChatPublisher((Redisson) redisson);
+        ChatPublisher publisher = new ChatPublisher(redissonClient);
         publisher.publish(channel, testMessage);
 
         // 4. 메시지가 수신될 때까지 최대 2초 대기
@@ -41,7 +41,7 @@ class ChatPubSubTest {
         assertTrue(completed);
         assertEquals(testMessage, received.toString());
 
-        redisson.shutdown();
+        redissonClient.shutdown();
     }
 
 }
