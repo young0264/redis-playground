@@ -1,7 +1,8 @@
-### Intellij template
-# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
-
-# IntelliJ
+# IDEA
+*.iml
+.idea/
 out/
-.idea/**
 
+# Gradle 관련
+.gradle/
+build/
