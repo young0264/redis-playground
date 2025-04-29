@@ -1,8 +1,19 @@
-# IDEA
+# IntelliJ IDEA
 *.iml
 .idea/
 out/
 
-# Gradle 관련
+# Gradle
 .gradle/
 build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Mac OS
+.DS_Store
+
+# Logs
+*.log
+
+# 기타
+*.class
