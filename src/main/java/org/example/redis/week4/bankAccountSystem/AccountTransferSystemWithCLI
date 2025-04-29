@@ -1,0 +1,9 @@
+WATCH user:A
+GET user:A  → balance = 1000
+MULTI
+DECRBY user:A 500
+INCRBY user:B 500
+EXEC
+
+- A의 balance가 다른 클라이언트에 의해 변경되면 EXEC 실패 → 다시 시도하거나 중단
+- Redis의 MULTI / EXEC는 명령어 묶음 실행을 위한 간단한 트랜잭션 도구로, 실행은 원자적이지만, 중간 값 변경은 WATCH로 감시해야 안전

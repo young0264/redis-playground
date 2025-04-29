@@ -16,53 +16,44 @@ public class AccountTransferSystem {
         this.redissonClient = RedisManager.createClient();
     }
 
-    public void transfer(String fromAccount, String toAccount, int amount){
-        TransactionOptions options = TransactionOptions.defaults().timeout(3_000, MILLISECONDS.MILLISECONDS);
-        RTransaction transaction = redissonClient.createTransaction(options);
-        try{
-            transaction.getBucket(fromAccount).set(
-                    Integer.parseInt(String.valueOf(redissonClient.getBucket(fromAccount))) - amount
-            );
+    // MULTI/EXEC 기반 트랜잭션 처리
+    public void transferWithTransaction(String fromAccount, String toAccount, int amount) {
+        RBatch batch = redissonClient.createBatch();
 
-            transaction.getBucket(toAccount).set(
-                    String.valueOf(
-                            Integer.parseInt(String.valueOf(redissonClient.getBucket(toAccount))) + amount
-                    )
-            );
+        batch.getAtomicLong(fromAccount).addAndGetAsync(-amount); // 송금쪽 계좌(출금)
+        batch.getAtomicLong(toAccount).addAndGetAsync(amount);    // 송신쪽 계좌(입금)
 
-            transaction.commit();
-            System.out.println("transfer success");
-            System.out.println("== from account == : " + fromAccount);
-            System.out.println("==  to account  == : " + toAccount);
-
-
-        }
-
-
+        batch.execute();
+        System.out.printf("Transferred %d from %s to %s via MULTI/EXEC%n", amount, fromAccount, toAccount);
     }
 
+    public boolean transferWithTransaction2(String fromAccount, String toAccount, int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("마이너스 통장은 안돼요.");
+        }
 
-//    // MULTI/EXEC 기반 트랜잭션 처리
-//    public void transferWithTransaction(String fromAccount, String toAccount, int amount) {
-//
-//        RBatch batch = redissonClient.createBatch();
-//        batch.getAtomicLong(fromAccount).addAndGetAsync(-amount);
-//        batch.getAtomicLong(toAccount).addAndGetAsync(amount);
-//
-//        batch.execute();
-//    }
-//
-//    // Lua 스크립트 기반 트랜잭션 처리
-//    public void transferWithLua(String fromAccount, String toAccount, int amount) {
-//        String luaScript = LuaScriptLoader.loadScript("transfer.lua");
-//
-//        redissonClient.getScript(StringCodec.INSTANCE).eval(
-//                RScript.Mode.READ_WRITE,
-//                luaScript,
-//                RScript.ReturnType.VALUE,
-//                Arrays.asList(fromAccount, toAccount),
-//                String.valueOf(amount)
-//        );
-//    }
+        RAtomicLong from = redissonClient.getAtomicLong(fromAccount);
+        RAtomicLong to = redissonClient.getAtomicLong(toAccount);
+
+        if (from == null || to == null) {
+            throw new IllegalArgumentException("존재하지 않는 계좌입니다.");
+        }
+
+        long currentBalance = from.get();
+
+        if (currentBalance < amount) {
+            System.out.println("잔액이 부족합니다.");
+            return false;
+        }
+
+        RBatch batch = redissonClient.createBatch();
+        batch.getAtomicLong(fromAccount).addAndGetAsync(-amount);
+        batch.getAtomicLong(toAccount).addAndGetAsync(amount);
+        batch.execute();
+
+        System.out.printf("Transferred %d from %s to %s via MULTI/EXEC%n", amount, fromAccount, toAccount);
+        return true;
+
+    }
 
 }

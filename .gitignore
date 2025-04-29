@@ -16,4 +16,4 @@ build/
 *.log
 
 # 기타
-*.class
+#*.class
