@@ -28,7 +28,6 @@ class AccountTransferSystemTest {
         redissonClient.getAtomicLong(toAccount).delete();
     }
 
-
     @Test
     @DisplayName("트랜잭션으로 송금 시도")
     void testTransferWithTransaction() {
@@ -42,6 +41,5 @@ class AccountTransferSystemTest {
         assertEquals(800L, fromBalance);
         assertEquals(700L, toBalance);
     }
-
 
 }

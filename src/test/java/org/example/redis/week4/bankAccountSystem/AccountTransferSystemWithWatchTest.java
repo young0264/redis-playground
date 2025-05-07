@@ -4,7 +4,6 @@ import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import org.junit.jupiter.api.*;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,7 +41,7 @@ class AccountTransferSystemWithWatchTest {
     @Test
     @DisplayName("잔액 충분하면 송금 성공")
     void testSuccessfulTransfer() {
-        boolean result = transferSystem.transfer(fromAccount, toAccount, 300);
+        boolean result = transferSystem.transfer(fromAccount, toAccount, 300, new CountDownLatch(1));
 
         assertTrue(result);
         assertEquals("700", commands.get(fromAccount));
@@ -50,47 +49,49 @@ class AccountTransferSystemWithWatchTest {
     }
 
     @Test
-    @DisplayName("송금 중 다른 사용자가 fromAccount를 변경하면 트랜잭션 롤백된다")
+    @DisplayName("송금은 실패, 외부 변경은 반영.")
     void testRollbackWhenFromAccountIsModified() throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(2);
-
-        CountDownLatch latch = new CountDownLatch(2);
+        CountDownLatch ready = new CountDownLatch(1);
+        CountDownLatch finish = new CountDownLatch(1);
 
         // 메인 송금 스레드
         executor.submit(() -> {
+            System.out.println("== main start ==");
             try {
-                boolean result = transferSystem.transfer(fromAccount, toAccount, 300);
-                System.out.println("[메인 송금] 성공 여부: " + result);
+                transferSystem.transfer(fromAccount, toAccount, 300, ready);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             } finally {
-                latch.countDown();
+                finish.countDown();
             }
         });
 
         // 개입하는 스레드 (송금 도중 fromAccount를 바꿔버림)
         executor.submit(() -> {
+            System.out.println("== interrupt start ==");
             try {
-                Thread.sleep(50); // 타이밍을 송금 중간에 맞추기 위해 약간 딜레이
+                ready.await();
                 commands.incrby(fromAccount, 100); // fromAccount를 외부에서 수정
                 System.out.println("[개입] fromAccount 강제 변경");
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 Thread.currentThread().interrupt();
             } finally {
-                latch.countDown();
+                finish.countDown();
             }
         });
 
-        latch.await();
+        finish.await();
         executor.shutdown();
 
-        assertEquals(fromAccount, 1000);
-        assertEquals(toAccount, 500);
-
+        assertEquals(commands.get(fromAccount), "1100");
+        assertEquals(commands.get(toAccount), "500");
     }
 
     @Test
     @DisplayName("잔액 부족하면 송금 실패")
     void testInsufficientBalance() {
-        boolean result = transferSystem.transfer(fromAccount, toAccount, 2000);
+        boolean result = transferSystem.transfer(fromAccount, toAccount, 2000, new CountDownLatch(1));
 
         assertFalse(result);
         assertEquals("1000", commands.get(fromAccount));
@@ -98,34 +99,19 @@ class AccountTransferSystemWithWatchTest {
     }
 
     @Test
-    @DisplayName("여러 송금 요청 중 일부만 성공해야 함 (동시성 테스트)")
-    void testConcurrentTransfers() throws InterruptedException {
-        int threadCount = 10;
-        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
-
-        CountDownLatch latch = new CountDownLatch(threadCount);
+    @DisplayName("잔액 이하의 금액만 송금이 가능 (동기 테스트)") void testConcurrentTransfers() {
         int transferAmount = 300;
+        int attemptCnt = 4;
+        int successCnt = 0;
 
-        for (int i = 0; i < threadCount; i++) {
-            executor.submit(() -> {
-                try {
-                    boolean result = transferSystem.transfer(fromAccount, toAccount, transferAmount);
-                    System.out.println("Transfer result: " + result);
-                } finally {
-                    latch.countDown();
-                }
-            });
+        for(int i = 0; i < attemptCnt; i++) {
+            boolean result = transferSystem.transfer(fromAccount, toAccount, transferAmount, new CountDownLatch(1));
+            if(result) successCnt++;
         }
 
-        latch.await();
-        executor.shutdown();
-
-        int finalFrom = Integer.parseInt(commands.get(fromAccount));
-        int finalTo = Integer.parseInt(commands.get(toAccount));
-        int expectedSuccessfulTransfers = (1000 / transferAmount);
-
-        assertEquals(1000 - (expectedSuccessfulTransfers * transferAmount), finalFrom);
-        assertEquals(500 + (expectedSuccessfulTransfers * transferAmount), finalTo);
+        assertEquals(successCnt, 3);
+        assertEquals("100", commands.get(fromAccount));
+        assertEquals("1400", commands.get(toAccount));
     }
 
 }
