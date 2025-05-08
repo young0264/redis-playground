@@ -1,6 +1,7 @@
 package org.example.redis.week4.bankAccountSystem;
 
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.TransactionResult;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import org.junit.jupiter.api.*;
@@ -49,7 +50,27 @@ class AccountTransferSystemWithWatchTest {
     }
 
     @Test
-    @DisplayName("송금은 실패, 외부 변경은 반영.")
+    @DisplayName("송금은 실패, 외부 변경은 반영(동기)")
+    void testRollbackWhenFromAccountIsModifiedWithSync(){
+        int amount = 300;
+
+        StatefulRedisConnection<String, String> connection = redisClient.connect();
+        RedisCommands<String, String> commands = connection.sync();
+
+        commands.watch(fromAccount);
+        commands.incrby(fromAccount, 100); // fromAccount를 외부에서 수정
+        String fromBalanceStr = commands.get(fromAccount);
+
+        commands.multi();
+        commands.decrby(fromAccount, amount); // from 계좌 출금
+        commands.incrby(toAccount, amount); // to 계좌 입금
+
+        TransactionResult result = commands.exec();
+        assertEquals(result.wasRolledBack(), true);
+    }
+
+    @Test
+    @DisplayName("송금은 실패, 외부 변경은 반영(비동기)")
     void testRollbackWhenFromAccountIsModified() throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         CountDownLatch ready = new CountDownLatch(1);
